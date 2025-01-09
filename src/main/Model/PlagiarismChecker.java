@@ -66,8 +66,10 @@ public class PlagiarismChecker {
             PlagiarismChecker checker = new PlagiarismChecker();
 
             // Import texts from files
-            String[] text1 = readTextFromFile("/home/etudiant/co221148/TP/s6/r6.05_dev_avance/TP_dev_avance_sc2/src/main/Model/La_France_contre_les_robots_Texte_entier.txt");
-            String[] text2 = readTextFromFile("../Ressources/Les_Pierres_de_venise_Texte_entier.txt");
+            System.out.println("Current working directory: " + System.getProperty("user.dir"));
+
+            String[] text1 = readTextFromFile("src/main/Model/La_France_contre_les_robots_Texte_entier.txt");
+            String[] text2 = readTextFromFile("src/main/Model/Les_Pierres_de_Venise_Texte_entier.txt");
 
             // Check for plagiarism with a minimum block size of 10 words
             String plagiarizedBlock = checker.checkPlagiarism(text1, text2, 10);
