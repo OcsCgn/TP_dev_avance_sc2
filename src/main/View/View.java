@@ -1,132 +1,140 @@
-package TP_dev_avance_sc2.src.main.View;
+package main.View;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
-public class View {
+public class View extends JFrame {
+    private JTextArea originalTextArea; // Zone pour le texte d'origine
+    private JTextField originalFileName; // Champ pour afficher le nom du fichier d'origine
+    private List<JTextArea> comparisonTextAreas; // Liste des zones de texte à comparer
+    private List<JTextField> comparisonFileNames; // Liste des noms de fichiers des textes à comparer
+    private JPanel comparisonContainer; // Conteneur pour les textes à comparer
+    private JButton addComparisonButton; // Bouton pour ajouter un texte à comparer
+    private JButton analyzeButton; // Bouton pour lancer l'analyse
+    private JTextArea resultArea; // Zone pour afficher les résultats
 
-    public static void main(String[] args) {
-        // Créer la fenêtre principale
-        JFrame frame = new JFrame("Dual Panel Example");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 600);
+    public View() {
+        comparisonTextAreas = new ArrayList<>();
+        comparisonFileNames = new ArrayList<>();
 
-        // Créer le premier panel
-        JPanel panel1 = new JPanel();
-        panel1.setLayout(new BorderLayout());
-        JTextArea textArea1 = new JTextArea();
-        JButton openFileButton1 = new JButton("Ouvrir Fichier");
-        panel1.add(new JScrollPane(textArea1), BorderLayout.CENTER);
-        panel1.add(openFileButton1, BorderLayout.SOUTH);
+        // Configuration de la fenêtre principale
+        setTitle("Analyse de Similarité de Textes");
+        setSize(1200, 700);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        // Créer le panel central avec le bouton et le label invisible
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-        JButton centralButton = new JButton("Action");
-        JLabel centralLabel = new JLabel("Texte Modifiable");
-        centralLabel.setVisible(false); // Rendre le label invisible initialement
+        // Panel gauche pour le texte d'origine
+        JPanel originalPanel = new JPanel(new BorderLayout());
+        originalPanel.setBorder(BorderFactory.createTitledBorder("Texte d'origine"));
+        
+        originalTextArea = new JTextArea(10, 30);
+        originalFileName = new JTextField("Nom du fichier d'origine");
+        originalFileName.setEditable(false);
+        JButton loadOriginalButton = new JButton("Charger texte d'origine");
+        
+        originalPanel.add(new JScrollPane(originalTextArea), BorderLayout.CENTER);
+        originalPanel.add(originalFileName, BorderLayout.NORTH);
+        originalPanel.add(loadOriginalButton, BorderLayout.SOUTH);
 
-        // Ajouter le bouton et le label au centre du panel
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        centerPanel.add(centralButton, gbc);
+        // Panel central pour les textes à comparer
+        comparisonContainer = new JPanel();
+        comparisonContainer.setLayout(new BoxLayout(comparisonContainer, BoxLayout.Y_AXIS));
+        JScrollPane comparisonScrollPane = new JScrollPane(comparisonContainer);
+        comparisonScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        gbc.gridy = 1;
-        gbc.insets = new Insets(10, 0, 0, 0); // Espacement entre le bouton et le label
-        centerPanel.add(centralLabel, gbc);
+        // Bouton pour ajouter un texte à comparer
+        addComparisonButton = new JButton("Ajouter un texte à comparer");
 
-        // Créer le conteneur de droite
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new BorderLayout());
+        // Panel pour afficher les résultats
+        JPanel resultPanel = new JPanel(new BorderLayout());
+        resultArea = new JTextArea();
+        resultArea.setEditable(false);
+        resultPanel.setBorder(BorderFactory.createTitledBorder("Résultats de l'analyse"));
+        resultPanel.add(new JScrollPane(resultArea), BorderLayout.CENTER);
 
-        // Zone défilable pour les mini panels
-        JPanel dynamicContainer = new JPanel();
-        dynamicContainer.setLayout(new BoxLayout(dynamicContainer, BoxLayout.Y_AXIS));
-        JScrollPane scrollPane = new JScrollPane(dynamicContainer);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        // Bouton pour lancer l'analyse
+        analyzeButton = new JButton("Analyser les textes");
 
-        // Bouton pour ajouter un nouveau texte
-        JButton addTextButton = new JButton("Ajouter un texte");
-        rightPanel.add(scrollPane, BorderLayout.CENTER);
-        rightPanel.add(addTextButton, BorderLayout.SOUTH);
+        // Ajouter les composants à la fenêtre
+        add(originalPanel, BorderLayout.WEST);
+        add(comparisonScrollPane, BorderLayout.CENTER);
+        add(resultPanel, BorderLayout.EAST);
+        add(addComparisonButton, BorderLayout.NORTH);
+        add(analyzeButton, BorderLayout.SOUTH);
 
-        // Ajouter des actions pour le bouton d'ajout
-        addTextButton.addActionListener(new ActionListener() {
-            int counter = 1; // Compteur pour nommer les zones de texte
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Créer un mini panel avec une zone de texte et un bouton
-                JPanel miniPanel = new JPanel();
-                miniPanel.setLayout(new BorderLayout());
-
-                JLabel lblTxt = new JLabel("Texte n°" + counter);
-                JTextArea textArea = new JTextArea(5, 20);
-                JButton openFileButton = new JButton("Ouvrir Fichier");
-
-                // Ajouter des actions pour ouvrir un fichier
-                openFileButton.addActionListener(new FileOpenAction(textArea));
-
-                // Ajouter les composants au mini panel
-                miniPanel.add(lblTxt, BorderLayout.NORTH); // Ajouter le label en haut
-                miniPanel.add(new JScrollPane(textArea), BorderLayout.CENTER); // Ajouter la zone de texte au centre
-                miniPanel.add(openFileButton, BorderLayout.SOUTH); // Ajouter le bouton en bas
-
-                // Ajouter le mini panel au conteneur dynamique
-                dynamicContainer.add(miniPanel);
-                dynamicContainer.revalidate(); // Mettre à jour l'affichage
-                dynamicContainer.repaint();
-
-                counter++; // Incrémenter le compteur
-            }
-        });
-
-        // Utiliser des JSplitPane pour ajuster les tailles relatives
-        JSplitPane splitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panel1, centerPanel);
-        JSplitPane splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPane1, rightPanel);
-
-        splitPane1.setResizeWeight(0.4); // Panel gauche prend 40% de l'espace
-        splitPane2.setResizeWeight(0.8); // Panel central et droit ajustent leurs proportions
-
-        // Ajouter le JSplitPane à la frame
-        frame.add(splitPane2, BorderLayout.CENTER);
-
-        // Ajouter les actions pour ouvrir un fichier à gauche
-        openFileButton1.addActionListener(new FileOpenAction(textArea1));
+        // Action par défaut : ajouter une première zone pour comparer
+        addComparisonTextArea();
 
         // Rendre la fenêtre visible
-        frame.setVisible(true);
+        setVisible(true);
+
+        // Ajouter action pour charger le texte d'origine
+        loadOriginalButton.addActionListener(e -> loadFile(originalTextArea, originalFileName));
     }
 
-    // Classe pour gérer l'ouverture de fichiers
-    static class FileOpenAction implements ActionListener {
-        private final JTextArea textArea;
+    // Méthode pour ajouter une nouvelle zone de texte à comparer
+    private void addComparisonTextArea() {
+        JPanel comparisonPanel = new JPanel(new BorderLayout());
 
-        public FileOpenAction(JTextArea textArea) {
-            this.textArea = textArea;
-        }
+        JTextField fileNameField = new JTextField("Nom du fichier");
+        fileNameField.setEditable(false);
+        JTextArea textArea = new JTextArea(5, 20);
+        JButton loadFileButton = new JButton("Charger texte à comparer");
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            JFileChooser fileChooser = new JFileChooser();
-            int option = fileChooser.showOpenDialog(null);
-            if (option == JFileChooser.APPROVE_OPTION) {
+        loadFileButton.addActionListener(e -> loadFile(textArea, fileNameField));
+
+        comparisonPanel.add(fileNameField, BorderLayout.NORTH);
+        comparisonPanel.add(new JScrollPane(textArea), BorderLayout.CENTER);
+        comparisonPanel.add(loadFileButton, BorderLayout.SOUTH);
+
+        comparisonContainer.add(comparisonPanel);
+        comparisonTextAreas.add(textArea);
+        comparisonFileNames.add(fileNameField);
+
+        comparisonContainer.revalidate();
+        comparisonContainer.repaint();
+    }
+
+    // Méthode pour charger un fichier dans une zone de texte
+    private void loadFile(JTextArea textArea, JTextField fileNameField) {
+        JFileChooser fileChooser = new JFileChooser();
+        int option = fileChooser.showOpenDialog(null);
+        if (option == JFileChooser.APPROVE_OPTION) {
+            try {
                 File file = fileChooser.getSelectedFile();
-                try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                    textArea.setText("");
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        textArea.append(line + "\n");
-                    }
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Erreur lors de la lecture du fichier : " + ex.getMessage());
-                }
+                fileNameField.setText(file.getName());
+                textArea.setText(new String(java.nio.file.Files.readAllBytes(file.toPath())));
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Erreur lors de la lecture du fichier : " + ex.getMessage());
             }
         }
+    }
+
+    // Méthode pour récupérer le texte d'origine
+    public String getOriginalText() {
+        return originalTextArea.getText();
+    }
+
+    // Méthode pour récupérer les textes à comparer
+    public List<String> getComparisonTexts() {
+        List<String> texts = new ArrayList<>();
+        for (JTextArea textArea : comparisonTextAreas) {
+            texts.add(textArea.getText());
+        }
+        return texts;
+    }
+
+    // Ajouter un écouteur pour le bouton d'analyse
+    public void addAnalyzeAction(ActionListener listener) {
+        analyzeButton.addActionListener(listener);
+    }
+
+    // Afficher les résultats
+    public void showResults(String results) {
+        resultArea.setText(results);
     }
 }

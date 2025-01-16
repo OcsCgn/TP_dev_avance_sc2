@@ -1,4 +1,4 @@
-package TP_dev_avance_sc2.src.main.Model;
+package main.Model;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
