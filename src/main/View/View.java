@@ -1,6 +1,8 @@
 package main.View;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -101,7 +103,7 @@ public class View extends JFrame {
 
 		// Ajouter le panneau local au panneau principal
 		comparisonPanel.add(textAreaPanel);
-		comparisonTextAreas.add(textArea); // Ajouter le JTextArea à la liste
+		comparisonTextAreas.add(textArea);
 
 		comparisonPanel.revalidate();
 		comparisonPanel.repaint();
@@ -125,6 +127,7 @@ public class View extends JFrame {
 
 	public void showResults(String results) {
 		resultArea.setText(results);
+		resultArea.add(new JScrollPane(resultArea), BorderLayout.CENTER);
 	}
 
 	// méthode pour mettre les partis copiées en rouge dans le texte original
