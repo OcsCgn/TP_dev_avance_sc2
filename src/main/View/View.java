@@ -4,137 +4,132 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
 public class View extends JFrame {
-    private JTextArea originalTextArea; // Zone pour le texte d'origine
-    private JTextField originalFileName; // Champ pour afficher le nom du fichier d'origine
-    private List<JTextArea> comparisonTextAreas; // Liste des zones de texte à comparer
-    private List<JTextField> comparisonFileNames; // Liste des noms de fichiers des textes à comparer
-    private JPanel comparisonContainer; // Conteneur pour les textes à comparer
-    private JButton addComparisonButton; // Bouton pour ajouter un texte à comparer
-    private JButton analyzeButton; // Bouton pour lancer l'analyse
-    private JTextArea resultArea; // Zone pour afficher les résultats
+	private JTextArea originalTextArea;
+	private List<JTextArea> comparisonTextAreas;
+	private JTextArea resultArea;
+	private JButton analyzeButton;
 
-    public View() {
-        comparisonTextAreas = new ArrayList<>();
-        comparisonFileNames = new ArrayList<>();
+	public View() {
+		comparisonTextAreas = new ArrayList<>();
 
-        // Configuration de la fenêtre principale
-        setTitle("Analyse de Similarité de Textes");
-        setSize(1200, 700);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+		setTitle("Analyse de Similarité de Textes");
+		setSize(1000, 700);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLayout(new BorderLayout());
 
-        // Panel gauche pour le texte d'origine
-        JPanel originalPanel = new JPanel(new BorderLayout());
-        originalPanel.setBorder(BorderFactory.createTitledBorder("Texte d'origine"));
-        
-        originalTextArea = new JTextArea(10, 30);
-        originalFileName = new JTextField("Nom du fichier d'origine");
-        originalFileName.setEditable(false);
-        JButton loadOriginalButton = new JButton("Charger texte d'origine");
-        
-        originalPanel.add(new JScrollPane(originalTextArea), BorderLayout.CENTER);
-        originalPanel.add(originalFileName, BorderLayout.NORTH);
-        originalPanel.add(loadOriginalButton, BorderLayout.SOUTH);
+		JPanel originalPanel = new JPanel(new BorderLayout());
+		originalPanel.setBorder(BorderFactory.createTitledBorder("Texte d'origine"));
+		JButton loadOriginalButton = new JButton("Charger un fichier");
+		loadOriginalButton.addActionListener(e -> {
+			loadText(originalTextArea);
+		});
+		originalPanel.add(loadOriginalButton, BorderLayout.NORTH);
 
-        // Panel central pour les textes à comparer
-        comparisonContainer = new JPanel();
-        comparisonContainer.setLayout(new BoxLayout(comparisonContainer, BoxLayout.Y_AXIS));
-        JScrollPane comparisonScrollPane = new JScrollPane(comparisonContainer);
-        comparisonScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		originalTextArea = new JTextArea(10, 30);
+		originalPanel.add(new JScrollPane(originalTextArea), BorderLayout.CENTER);
+		add(originalPanel, BorderLayout.WEST);
 
-        // Bouton pour ajouter un texte à comparer
-        addComparisonButton = new JButton("Ajouter un texte à comparer");
+		JPanel comparisonPanel = new JPanel();
+		comparisonPanel.setLayout(new BoxLayout(comparisonPanel, BoxLayout.Y_AXIS));
+		comparisonPanel.setBorder(BorderFactory.createTitledBorder("Textes à comparer"));
 
-        // Panel pour afficher les résultats
-        JPanel resultPanel = new JPanel(new BorderLayout());
-        resultArea = new JTextArea();
-        resultArea.setEditable(false);
-        resultPanel.setBorder(BorderFactory.createTitledBorder("Résultats de l'analyse"));
-        resultPanel.add(new JScrollPane(resultArea), BorderLayout.CENTER);
+		JButton addComparisonButton = new JButton("Ajouter un texte à comparer");
+		addComparisonButton.addActionListener(e -> addComparisonTextArea(comparisonPanel));
+		comparisonPanel.add(addComparisonButton);
 
-        // Bouton pour lancer l'analyse
-        analyzeButton = new JButton("Analyser les textes");
+		add(comparisonPanel, BorderLayout.CENTER);
 
-        // Ajouter les composants à la fenêtre
-        add(originalPanel, BorderLayout.WEST);
-        add(comparisonScrollPane, BorderLayout.CENTER);
-        add(resultPanel, BorderLayout.EAST);
-        add(addComparisonButton, BorderLayout.NORTH);
-        add(analyzeButton, BorderLayout.SOUTH);
+		JPanel resultPanel = new JPanel(new BorderLayout());
+		resultPanel.setBorder(BorderFactory.createTitledBorder("Résultats"));
 
-        // Action par défaut : ajouter une première zone pour comparer
-        addComparisonTextArea();
+		resultArea = new JTextArea();
+		resultArea.setEditable(false);
+		resultPanel.add(new JScrollPane(resultArea), BorderLayout.CENTER);
+		add(resultPanel, BorderLayout.EAST);
 
-        // Rendre la fenêtre visible
-        setVisible(true);
+		analyzeButton = new JButton("Analyser");
+		add(analyzeButton, BorderLayout.SOUTH);
 
-        // Ajouter action pour charger le texte d'origine
-        loadOriginalButton.addActionListener(e -> loadFile(originalTextArea, originalFileName));
-    }
+		setVisible(true);
+	}
 
-    // Méthode pour ajouter une nouvelle zone de texte à comparer
-    private void addComparisonTextArea() {
-        JPanel comparisonPanel = new JPanel(new BorderLayout());
+	public void loadText(JTextArea textArea) {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Choisir un fichier texte");
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fileChooser.setAcceptAllFileFilterUsed(false);
 
-        JTextField fileNameField = new JTextField("Nom du fichier");
-        fileNameField.setEditable(false);
-        JTextArea textArea = new JTextArea(5, 20);
-        JButton loadFileButton = new JButton("Charger texte à comparer");
+		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			File file = fileChooser.getSelectedFile();
+			try {
+				String text = new String(Files.readAllBytes(file.toPath()));
+				textArea.setText(text);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, "Erreur lors de la lecture du fichier.", "Erreur",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
 
-        loadFileButton.addActionListener(e -> loadFile(textArea, fileNameField));
+	private void addComparisonTextArea(JPanel comparisonPanel) {
+		JPanel textAreaPanel = new JPanel(new BorderLayout());
+		JTextArea textArea = new JTextArea(5, 20);
+		JButton loadFile = new JButton("Charger un fichier");
+		JButton removeButton = new JButton("Supprimer");
 
-        comparisonPanel.add(fileNameField, BorderLayout.NORTH);
-        comparisonPanel.add(new JScrollPane(textArea), BorderLayout.CENTER);
-        comparisonPanel.add(loadFileButton, BorderLayout.SOUTH);
+		// Ajouter des actions pour les boutons
+		loadFile.addActionListener(e -> loadText(textArea));
+		removeButton.addActionListener(e -> {
+			comparisonPanel.remove(textAreaPanel); // Supprime le panneau contenant le JTextArea et les boutons
+			comparisonTextAreas.remove(textArea); // Supprime le JTextArea de la liste
+			comparisonPanel.revalidate();
+			comparisonPanel.repaint();
+		});
 
-        comparisonContainer.add(comparisonPanel);
-        comparisonTextAreas.add(textArea);
-        comparisonFileNames.add(fileNameField);
+		// Ajouter les composants au panneau local
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.add(loadFile);
+		buttonPanel.add(removeButton);
 
-        comparisonContainer.revalidate();
-        comparisonContainer.repaint();
-    }
+		textAreaPanel.add(buttonPanel, BorderLayout.NORTH);
+		textAreaPanel.add(new JScrollPane(textArea), BorderLayout.CENTER);
 
-    // Méthode pour charger un fichier dans une zone de texte
-    private void loadFile(JTextArea textArea, JTextField fileNameField) {
-        JFileChooser fileChooser = new JFileChooser();
-        int option = fileChooser.showOpenDialog(null);
-        if (option == JFileChooser.APPROVE_OPTION) {
-            try {
-                File file = fileChooser.getSelectedFile();
-                fileNameField.setText(file.getName());
-                textArea.setText(new String(java.nio.file.Files.readAllBytes(file.toPath())));
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Erreur lors de la lecture du fichier : " + ex.getMessage());
-            }
-        }
-    }
+		// Ajouter le panneau local au panneau principal
+		comparisonPanel.add(textAreaPanel);
+		comparisonTextAreas.add(textArea); // Ajouter le JTextArea à la liste
 
-    // Méthode pour récupérer le texte d'origine
-    public String getOriginalText() {
-        return originalTextArea.getText();
-    }
+		comparisonPanel.revalidate();
+		comparisonPanel.repaint();
+	}
 
-    // Méthode pour récupérer les textes à comparer
-    public List<String> getComparisonTexts() {
-        List<String> texts = new ArrayList<>();
-        for (JTextArea textArea : comparisonTextAreas) {
-            texts.add(textArea.getText());
-        }
-        return texts;
-    }
+	public String getOriginalText() {
+		return originalTextArea.getText();
+	}
 
-    // Ajouter un écouteur pour le bouton d'analyse
-    public void addAnalyzeAction(ActionListener listener) {
-        analyzeButton.addActionListener(listener);
-    }
+	public List<String> getComparisonTexts() {
+		List<String> texts = new ArrayList<>();
+		for (JTextArea textArea : comparisonTextAreas) {
+			texts.add(textArea.getText());
+		}
+		return texts;
+	}
 
-    // Afficher les résultats
-    public void showResults(String results) {
-        resultArea.setText(results);
-    }
+	public void addAnalyzeAction(ActionListener listener) {
+		analyzeButton.addActionListener(listener);
+	}
+
+	public void showResults(String results) {
+		resultArea.setText(results);
+	}
+
+	// méthode pour mettre les partis copiées en rouge dans le texte original
+	public void highlightText(String text) {
+		originalTextArea.setText(text);
+	}
+
 }
