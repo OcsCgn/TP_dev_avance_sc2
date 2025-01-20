@@ -49,8 +49,10 @@ public class View extends JFrame {
 		JPanel resultPanel = new JPanel(new BorderLayout());
 		resultPanel.setBorder(BorderFactory.createTitledBorder("Résultats"));
 
-		resultArea = new JTextArea();
+		resultArea = new JTextArea(10, 30);
 		resultArea.setEditable(false);
+		resultArea.setLineWrap(true);
+		resultArea.setWrapStyleWord(true);
 		resultPanel.add(new JScrollPane(resultArea), BorderLayout.CENTER);
 		add(resultPanel, BorderLayout.EAST);
 
@@ -127,7 +129,6 @@ public class View extends JFrame {
 
 	public void showResults(String results) {
 		resultArea.setText(results);
-		resultArea.add(new JScrollPane(resultArea), BorderLayout.CENTER);
 	}
 
 	// méthode pour mettre les partis copiées en rouge dans le texte original
