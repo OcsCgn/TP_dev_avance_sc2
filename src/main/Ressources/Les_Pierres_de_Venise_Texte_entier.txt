@@ -6,6 +6,23 @@ John Ruskin
 
 
 
+  </head>
+  <body>
+    <span align="justify" style="letter-spacing: normal; text-indent: 0px; text-transform: none; word-spacing: 0px; white-space: normal; background-color: rgb(255, 255, 255); display: inline !important; float: none"><font color="rgb(0, 0, 0)" face="Open Sans, Arial, sans-serif" size="14px">Le</font></span><font color="rgb(0, 0, 0)" face="Open Sans, Arial, sans-serif" size="14px"><span>&#160;</span><strong align="justify" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; letter-spacing: normal; text-indent: 0px; text-transform: none; word-spacing: 0px; white-space: normal; background-color: rgb(255, 255, 255)">Lorem
+    Ipsum</strong><span>&#160;</span><span align="justify" style="letter-spacing: normal; text-indent: 0px; text-transform: none; word-spacing: 0px; white-space: normal; background-color: rgb(255, 255, 255); display: inline !important; float: none">est
+    simplement du faux texte employ&#233; dans la composition et la mise en page
+    avant impression. Le Lorem Ipsum est le faux texte standard de
+    l'imprimerie depuis les ann&#233;es 1500, quand un imprimeur anonyme assembla
+    ensemble des morceaux de texte pour r&#233;aliser un livre sp&#233;cimen de polices
+    de texte. Il n'a pas fait que survivre cinq si&#232;cles, mais s'est aussi
+    adapt&#233; &#224; la bureautique informatique, sans que son contenu n'en soit
+    modifi&#233;. Il a &#233;t&#233; popularis&#233; dans les ann&#233;es 1960 gr&#226;ce &#224; la vente de
+    feuilles Letraset contenant des passages du Lorem Ipsum, et, plus
+    r&#233;cemment, par son inclusion dans des applications de mise en page de
+    texte, comme Aldus PageMake</span></font>
+  </body>
+</html>
+
 
 
 Renouard, Paris, 1921 (5e éd.)

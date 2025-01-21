@@ -2,7 +2,7 @@ package main.View;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -11,58 +11,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class View extends JFrame {
-	private JTextArea originalTextArea;
-	private List<JTextArea> comparisonTextAreas;
-	private JTextArea resultArea;
+	private JTextPane originalTextPane;
+	private List<JTextPane> comparisonTextPanes;
+	private JTextPane resultPane;
 	private JButton analyzeButton;
 
 	public View() {
-		comparisonTextAreas = new ArrayList<>();
+		comparisonTextPanes = new ArrayList<>();
 
 		setTitle("Analyse de Similarité de Textes");
-		setSize(1000, 700);
+		setSize(1800, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		setLayout(new BorderLayout());
 
+		JPanel mainPanel = new JPanel(new GridLayout(1, 3));
 		JPanel originalPanel = new JPanel(new BorderLayout());
 		originalPanel.setBorder(BorderFactory.createTitledBorder("Texte d'origine"));
+
 		JButton loadOriginalButton = new JButton("Charger un fichier");
-		loadOriginalButton.addActionListener(e -> {
-			loadText(originalTextArea);
-		});
+		loadOriginalButton.addActionListener(e -> loadText(originalTextPane));
 		originalPanel.add(loadOriginalButton, BorderLayout.NORTH);
 
-		originalTextArea = new JTextArea(10, 30);
-		originalPanel.add(new JScrollPane(originalTextArea), BorderLayout.CENTER);
-		add(originalPanel, BorderLayout.WEST);
+		originalTextPane = createTextPane();
+		originalPanel.add(new JScrollPane(originalTextPane), BorderLayout.CENTER);
+		mainPanel.add(originalPanel);
 
 		JPanel comparisonPanel = new JPanel();
 		comparisonPanel.setLayout(new BoxLayout(comparisonPanel, BoxLayout.Y_AXIS));
 		comparisonPanel.setBorder(BorderFactory.createTitledBorder("Textes à comparer"));
-
 		JButton addComparisonButton = new JButton("Ajouter un texte à comparer");
-		addComparisonButton.addActionListener(e -> addComparisonTextArea(comparisonPanel));
+		addComparisonButton.addActionListener(e -> addComparisonTextPane(comparisonPanel));
 		comparisonPanel.add(addComparisonButton);
-
-		add(comparisonPanel, BorderLayout.CENTER);
+		mainPanel.add(comparisonPanel);
 
 		JPanel resultPanel = new JPanel(new BorderLayout());
 		resultPanel.setBorder(BorderFactory.createTitledBorder("Résultats"));
 
-		resultArea = new JTextArea(10, 30);
-		resultArea.setEditable(false);
-		resultArea.setLineWrap(true);
-		resultArea.setWrapStyleWord(true);
-		resultPanel.add(new JScrollPane(resultArea), BorderLayout.CENTER);
-		add(resultPanel, BorderLayout.EAST);
+		resultPane = createTextPane();
+		resultPane.setEditable(false);
+		resultPanel.add(new JScrollPane(resultPane), BorderLayout.CENTER);
+		mainPanel.add(resultPanel);
+		add(mainPanel, BorderLayout.CENTER);
 
 		analyzeButton = new JButton("Analyser");
-		add(analyzeButton, BorderLayout.SOUTH);
+		JPanel analyzePanel = new JPanel();
+		analyzePanel.add(analyzeButton);
+		add(analyzePanel, BorderLayout.SOUTH);
 
 		setVisible(true);
 	}
 
-	public void loadText(JTextArea textArea) {
+	public void loadText(JTextPane textPane) {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Choisir un fichier texte");
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -72,7 +72,7 @@ public class View extends JFrame {
 			File file = fileChooser.getSelectedFile();
 			try {
 				String text = new String(Files.readAllBytes(file.toPath()));
-				textArea.setText(text);
+				setTextWithJustification(textPane, text);
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(this, "Erreur lors de la lecture du fichier.", "Erreur",
 						JOptionPane.ERROR_MESSAGE);
@@ -80,45 +80,53 @@ public class View extends JFrame {
 		}
 	}
 
-	private void addComparisonTextArea(JPanel comparisonPanel) {
-		JPanel textAreaPanel = new JPanel(new BorderLayout());
-		JTextArea textArea = new JTextArea(5, 20);
+	private void addComparisonTextPane(JPanel comparisonPanel) {
+		JPanel textPanePanel = new JPanel(new BorderLayout());
+		JTextPane textPane = createTextPane();
 		JButton loadFile = new JButton("Charger un fichier");
 		JButton removeButton = new JButton("Supprimer");
 
-		// Ajouter des actions pour les boutons
-		loadFile.addActionListener(e -> loadText(textArea));
+		loadFile.addActionListener(e -> loadText(textPane));
 		removeButton.addActionListener(e -> {
-			comparisonPanel.remove(textAreaPanel); // Supprime le panneau contenant le JTextArea et les boutons
-			comparisonTextAreas.remove(textArea); // Supprime le JTextArea de la liste
+			comparisonPanel.remove(textPanePanel);
+			comparisonTextPanes.remove(textPane);
 			comparisonPanel.revalidate();
 			comparisonPanel.repaint();
 		});
-
-		// Ajouter les composants au panneau local
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(loadFile);
 		buttonPanel.add(removeButton);
 
-		textAreaPanel.add(buttonPanel, BorderLayout.NORTH);
-		textAreaPanel.add(new JScrollPane(textArea), BorderLayout.CENTER);
+		textPanePanel.add(buttonPanel, BorderLayout.NORTH);
+		textPanePanel.add(new JScrollPane(textPane), BorderLayout.CENTER);
 
-		// Ajouter le panneau local au panneau principal
-		comparisonPanel.add(textAreaPanel);
-		comparisonTextAreas.add(textArea);
+		comparisonPanel.add(textPanePanel);
+		comparisonTextPanes.add(textPane);
 
 		comparisonPanel.revalidate();
 		comparisonPanel.repaint();
 	}
 
+	private JTextPane createTextPane() {
+		JTextPane textPane = new JTextPane();
+		textPane.setMargin(new Insets(10, 10, 10, 10));
+		textPane.setContentType("text/html");
+		return textPane;
+	}
+
+	private void setTextWithJustification(JTextPane textPane, String htmlContent) {
+		textPane.setText("<html><body style='text-align: justify; font-size: 12px;'>"
+				+ htmlContent + "</body></html>");
+	}
+
 	public String getOriginalText() {
-		return originalTextArea.getText();
+		return originalTextPane.getText();
 	}
 
 	public List<String> getComparisonTexts() {
 		List<String> texts = new ArrayList<>();
-		for (JTextArea textArea : comparisonTextAreas) {
-			texts.add(textArea.getText());
+		for (JTextPane textPane : comparisonTextPanes) {
+			texts.add(textPane.getText());
 		}
 		return texts;
 	}
@@ -128,12 +136,14 @@ public class View extends JFrame {
 	}
 
 	public void showResults(String results) {
-		resultArea.setText(results);
+		setTextWithJustification(resultPane, results);
 	}
 
-	// méthode pour mettre les partis copiées en rouge dans le texte original
 	public void highlightText(String text) {
-		originalTextArea.setText(text);
+		setTextWithJustification(originalTextPane, text);
 	}
 
+	public void setOriginalText(String originalText) {
+		setTextWithJustification(originalTextPane, originalText);
+	}
 }
