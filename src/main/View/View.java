@@ -15,6 +15,7 @@ public class View extends JFrame {
 	private List<JTextPane> comparisonTextPanes;
 	private JTextPane resultPane;
 	private JButton analyzeButton;
+	private String lastOpenedFilePath;
 
 	public View() {
 		comparisonTextPanes = new ArrayList<>();
@@ -67,9 +68,15 @@ public class View extends JFrame {
 		fileChooser.setDialogTitle("Choisir un fichier texte");
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setAcceptAllFileFilterUsed(false);
-
+	
+		if (lastOpenedFilePath != null) {
+			fileChooser.setCurrentDirectory(new File(lastOpenedFilePath).getParentFile());
+		}
+	
 		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
+			lastOpenedFilePath = file.getAbsolutePath();
+	
 			try {
 				String text = new String(Files.readAllBytes(file.toPath()));
 				setTextWithJustification(textPane, text);
