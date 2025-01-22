@@ -17,10 +17,11 @@ public class FaisMain {
 				String partieIdentiqueTemp = findSuite(words1, words2, i);
 				if (partieIdentiqueTemp.split("\\s+").length >= 5) {
 					partieIdentique.add(partieIdentiqueTemp.trim());
+					i += partieIdentiqueTemp.split("\\s+").length - 1;
 				}
 			}
 		}
-		return filterIdenticalParts(partieIdentique, text1);
+		return partieIdentique;
 	}
 
 	private static String findSuite(String[] words1, String[] words2, int i) {
