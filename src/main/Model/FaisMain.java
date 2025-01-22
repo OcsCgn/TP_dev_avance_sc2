@@ -35,17 +35,6 @@ public class FaisMain {
 		return partieIdentique.toString();
 	}
 
-	private static List<String> filterIdenticalParts(List<String> parts, String text1) {
-		parts.sort(Comparator.comparingInt(String::length).reversed());
-		List<String> filteredParts = new ArrayList<>();
-		for (String part : parts) {
-			if (filteredParts.stream().noneMatch(filteredPart -> filteredPart.contains(part))) {
-				filteredParts.add(part);
-			}
-		}
-		return filteredParts;
-	}
-
 	public static String readFile(String filePath) throws IOException {
 		StringBuilder text = new StringBuilder();
 		try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
