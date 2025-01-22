@@ -69,8 +69,6 @@ fi
 
 javac -encoding utf8 -d "./bin" "@compile.list"
 
-cp -r donnees ./bin/
-
 cd ./bin
 
 java main.Main -cp "./bin"

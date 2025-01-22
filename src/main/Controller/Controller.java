@@ -31,7 +31,9 @@ public class Controller {
 					results.append("Plagiat détecté dans les parties suivantes :\n");
 					for (String part : identicalParts) {
 						results.append(part).append("\n");
-						// = highlightText(originalText, part);
+						//originalText = highlight(originalText, part);
+						//view.setOrignalText(originalText);
+						
 					}
 				}
 				results.append("\n");
@@ -42,4 +44,22 @@ public class Controller {
 		}
 		view.showResults(results.toString());
 	}
+
+	private String highlight(String originalText, String partToHighlight) {
+		String normalizedOriginal = originalText.replaceAll("\\s+", "").trim();
+		String normalizedPart = partToHighlight.replaceAll("\\s+", "").trim();
+	
+		if (normalizedOriginal.contains(normalizedPart)) {
+			String highlightedText = normalizedOriginal.replace(
+					normalizedPart,
+					"<span style='color:red; font-weight:bold;'>" + partToHighlight + "</span>"
+			);
+
+			System.out.println(highlightedText);
+			return highlightedText;
+		}
+
+		return originalText;
+	}
+	
 }
