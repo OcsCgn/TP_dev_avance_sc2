@@ -5,7 +5,7 @@ Ce projet vise à fournir une application permettant de détecter et de mesurer 
 ## Fonctionnalités
 - Analyse rapide des similarités entre deux textes.
 - Implémentation de deux algorithmes de détection :
-  1. **Winnowing** : une méthode populaire pour détecter le plagiat basée sur des empreintes digitales de texte.
+  1. **Winnowing** : une méthode populaire pour détecter le plagiat basée sur des empreintes digitales de texte. Nous sommes partis de cet algorithme pour créer le nôtre.
   2. **Algorithme développé par l'équipe** : une solution sur mesure pour optimiser la détection des similarités.
 
 ## Prérequis
