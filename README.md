@@ -29,16 +29,13 @@ Ce projet vise à fournir une application permettant de détecter et de mesurer 
    cd chemin/vers/le/répertoire
    ```
 
-3. **Compiler les fichiers Java** :
+3. **Lancer l'application** :
    ```bash
-   javac *.java
+   ./run.bat
    ```
-
-4. **Exécuter le programme principal** :
-   ```bash
-   java Main
+    ```bash
+   ./run.sh
    ```
-
 ---
 
 ## Architecture de l'Application
