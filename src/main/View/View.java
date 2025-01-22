@@ -1,8 +1,6 @@
 package main.View;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -139,7 +137,6 @@ public class View extends JFrame {
 		for (JTextPane textPane : comparisonTextPanes) {
 			texts.add(textPane.getText());
 		}
-		// System.out.println("texts: " + texts);
 		return texts;
 	}
 
