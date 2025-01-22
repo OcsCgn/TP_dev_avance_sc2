@@ -68,15 +68,15 @@ public class View extends JFrame {
 		fileChooser.setDialogTitle("Choisir un fichier texte");
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setAcceptAllFileFilterUsed(false);
-	
+
 		if (lastOpenedFilePath != null) {
 			fileChooser.setCurrentDirectory(new File(lastOpenedFilePath).getParentFile());
 		}
-	
+
 		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
 			lastOpenedFilePath = file.getAbsolutePath();
-	
+
 			try {
 				String text = new String(Files.readAllBytes(file.toPath()));
 				setTextWithJustification(textPane, text);
@@ -135,6 +135,7 @@ public class View extends JFrame {
 		for (JTextPane textPane : comparisonTextPanes) {
 			texts.add(textPane.getText());
 		}
+		// System.out.println("texts: " + texts);
 		return texts;
 	}
 

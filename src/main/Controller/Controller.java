@@ -24,17 +24,16 @@ public class Controller {
 		for (int i = 0; i < comparisonTexts.size(); i++) {
 			try {
 				List<String> identicalParts = FaisMain.findPlagiat(originalText, comparisonTexts.get(i));
-				results.append("Comparaison avec le Texte ").append(i + 1).append(" :\n");
+				results.append("Comparaison avec le Texte ").append(i + 1).append(" :\n\n");
 				if (identicalParts.isEmpty()) {
 					results.append("Pas de plagiat détecté.\n");
 				} else {
-					results.append("Plagiat détecté dans les parties suivantes :\n");
+					results.append("Plagiat détecté dans les parties suivantes :\n\n");
 					for (String part : identicalParts) {
 						results.append(part).append("\n");
-						// = highlightText(originalText, part);
 					}
 				}
-				results.append("\n");
+				results.append("\n\n\n");
 			} catch (Exception e) {
 				results.append("Erreur lors de l'analyse du Texte ").append(i + 1).append(".\n");
 				e.printStackTrace();

@@ -45,10 +45,6 @@ public class FaisMain {
 		return filteredParts;
 	}
 
-	public static String cleanText(String text) {
-		return text.toLowerCase().replaceAll("[^a-zA-Z0-9 ]", "").trim();
-	}
-
 	public static String readFile(String filePath) throws IOException {
 		StringBuilder text = new StringBuilder();
 		try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
