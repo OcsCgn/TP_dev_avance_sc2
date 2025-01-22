@@ -41,4 +41,21 @@ public class Controller {
 		}
 		view.showResults(results.toString());
 	}
+
+	private String highlight(String originalText, String partToHighlight) {
+		String normalizedOriginal = originalText.replaceAll("\\s+", "").trim();
+		String normalizedPart = partToHighlight.replaceAll("\\s+", "").trim();
+
+		if (normalizedOriginal.contains(normalizedPart)) {
+			String highlightedText = normalizedOriginal.replace(
+					normalizedPart,
+					"<span style='color:red; font-weight:bold;'>" + partToHighlight + "</span>");
+
+			System.out.println(highlightedText);
+			return highlightedText;
+		}
+
+		return originalText;
+	}
+
 }

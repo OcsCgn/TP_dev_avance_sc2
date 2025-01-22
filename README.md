@@ -5,7 +5,7 @@ Ce projet vise à fournir une application permettant de détecter et de mesurer 
 ## Fonctionnalités
 - Analyse rapide des similarités entre deux textes.
 - Implémentation de deux algorithmes de détection :
-  1. **Winnowing** : une méthode populaire pour détecter le plagiat basée sur des empreintes digitales de texte.
+  1. **Winnowing** : une méthode populaire pour détecter le plagiat basée sur des empreintes digitales de texte. Nous sommes partis de cet algorithme pour créer le nôtre.
   2. **Algorithme développé par l'équipe** : une solution sur mesure pour optimiser la détection des similarités.
 
 ## Prérequis
@@ -29,16 +29,13 @@ Ce projet vise à fournir une application permettant de détecter et de mesurer 
    cd chemin/vers/le/répertoire
    ```
 
-3. **Compiler les fichiers Java** :
+3. **Lancer l'application** :
    ```bash
-   javac *.java
+   ./run.bat
    ```
-
-4. **Exécuter le programme principal** :
-   ```bash
-   java Main
+    ```bash
+   ./run.sh
    ```
-
 ---
 
 ## Architecture de l'Application

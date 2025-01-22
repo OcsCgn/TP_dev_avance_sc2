@@ -130,6 +130,10 @@ public class View extends JFrame {
 		return originalTextPane.getText();
 	}
 
+	public void setOrignalText(String text) {
+		originalTextPane.setText(text);
+	}
+
 	public List<String> getComparisonTexts() {
 		List<String> texts = new ArrayList<>();
 		for (JTextPane textPane : comparisonTextPanes) {
